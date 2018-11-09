@@ -21,6 +21,7 @@ var_dump($validator->failed()); // false
 
 - [Installation](#installation)
 - [Examples](#examples)
+- [Rules](#rules)
 
 ## Installation
 
@@ -56,4 +57,29 @@ catch( UnknownRuleException $exception ) {
 
   exit(1);
 }
+```
+
+## Rules
+
+- [array](#array)
+- [string](#string)
+
+### array
+
+Validate that a key is an array.
+
+```php
+$validator = new Validator([
+    'hobbies' => ['array']
+]);
+```
+
+### string
+
+Validate that a key is a string.
+
+```php
+$validator = new Validator([
+    'name' = ['string']
+]);
 ```
