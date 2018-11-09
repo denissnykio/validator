@@ -16,6 +16,7 @@ use Khalyomede\Exception\UnknownRuleException;
 class Validator {
     const RULE_STRING = 'string';
     const RULE_ARRAY = 'array';
+    const RULE_REQUIRED = 'required';
 
     /**
      * Contains the rules for validating an array.
@@ -102,6 +103,11 @@ class Validator {
                 }
                 else if( $rule === static::RULE_ARRAY ) {
                     if( is_array($value) === false ) {
+                        $this->_addFailure();
+                    }
+                }
+                else if( $rule === static::RULE_REQUIRED ) {
+                    if( isset($items[$key]) === false ) {
                         $this->_addFailure();
                     }
                 }
