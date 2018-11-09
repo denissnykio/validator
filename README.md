@@ -34,6 +34,7 @@ composer require khalyomede\validator:0.*
 ## Examples
 
 - [Example 1: validating a string](#example-1-validating-a-string)
+- [Example 2: validating a required element](#example-2-validating-a-required-element)
 
 ### Example 1: validating a string
 
@@ -56,6 +57,28 @@ catch( UnknownRuleException $exception ) {
   echo "rule {$exception->getRule()} does not exists";
 
   exit(1);
+}
+```
+
+### Example 2: validating a required element
+
+```php
+require __DIR__ . '/../vendor/autoload.php';
+
+use Khalyomede\Validator;
+use Khalyomede\Exception\UnknownRuleException;
+
+$validator = new Validator(['name' => ['required', 'string']]);
+
+try {
+    $validator->validate(['name' => 'John']);
+
+    var_dump($validator->failed()); // false
+}
+catch( UnknownRuleException $exception ) {
+    echo "rule {$exception->getRule()} does not exist";
+
+    exit(1);
 }
 ```
 
