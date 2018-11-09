@@ -1,0 +1,25 @@
+{
+	"name": "khalyomede/validator",
+	"description": "Validate arrays.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Khalyomede",
+			"email": "khalyomede@gmail.com"
+		}
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=7.2.0",
+		"phpunit/phpunit": "7.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Khalyomede\\": "src"
+		}
+	},
+	"config": {
+		"bin-dir": "bin"
+	}
+}
