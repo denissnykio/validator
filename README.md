@@ -91,6 +91,7 @@ catch( UnknownRuleException $exception ) {
 - [filled](#filled)
 - [required](#required)
 - [string](#string)
+- [upper](#upper)
 
 ### array
 
@@ -129,5 +130,15 @@ Validate that a key is a string.
 ```php
 $validator = new Validator([
     'name' = ['string']
+]);
+```
+
+### upper
+
+Validate that a string is only in uppercase.
+
+```php
+$validator = new Validator([
+    'name' => ['uppercase']
 ]);
 ```
