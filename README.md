@@ -11,7 +11,7 @@ $validator = new Validator([
 
 $validator->validate([
   'name' => 'John', 
-  'hobbies' => ['', '', '']
+  'hobbies' => ['programming', 'comics', 'workout']
 ]);
 
 var_dump($validator->failed()); // false
