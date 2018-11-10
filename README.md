@@ -2,6 +2,9 @@
 
 Validate arrays.
 
+
+![PHP from Packagist](https://img.shields.io/packagist/php-v/khalyomede/validator.svg) ![Packagist](https://img.shields.io/packagist/v/khalyomede/validator.svg) ![Codeship](https://img.shields.io/codeship/692b2c10-c712-0136-43ce-66bc421a848b.svg) ![Packagist](https://img.shields.io/packagist/l/khalyomede/validator.svg)
+
 ```php
 $validator = new Validator([
   'name' => ['required', 'string'],
