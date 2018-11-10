@@ -17,6 +17,7 @@ class Validator {
     const RULE_STRING = 'string';
     const RULE_ARRAY = 'array';
     const RULE_REQUIRED = 'required';
+    const RULE_FILLED = 'filled';
 
     /**
      * Contains the rules for validating an array.
@@ -108,6 +109,11 @@ class Validator {
                 }
                 else if( $rule === static::RULE_REQUIRED ) {
                     if( isset($items[$key]) === false ) {
+                        $this->_addFailure();
+                    }
+                }
+                else if( $rule === static::RULE_FILLED ) {
+                    if( isset($items[$key]) === false || empty($value) === true ) {
                         $this->_addFailure();
                     }
                 }
