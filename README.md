@@ -88,6 +88,7 @@ catch( UnknownRuleException $exception ) {
 ## Rules
 
 - [array](#array)
+- [filled](#filled)
 - [required](#required)
 - [string](#string)
 
@@ -98,6 +99,16 @@ Validate that a key is an array.
 ```php
 $validator = new Validator([
     'hobbies' => ['array']
+]);
+```
+
+### filled
+
+Validate that a key is filled with a non empty value.
+
+```php
+$validator = new Validator([
+    'name' => ['filled']
 ]);
 ```
 
