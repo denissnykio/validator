@@ -22,6 +22,14 @@ class ValidatorTest extends TestCase {
     public function testRequired() {
         $validator = new Validator(['name' => ['required']]);
 
+        $validator->validate(['name' => '']);
+
+        $this->assertEquals($validator->failed(), false);
+    }
+
+    public function testFilled() {
+        $validator = new Validator(['name' => ['filled']]);
+
         $validator->validate(['name' => 'John']);
 
         $this->assertEquals($validator->failed(), false);
