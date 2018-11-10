@@ -2,6 +2,8 @@
 namespace Khalyomede;
 
 use Khalyomede\Exception\UnknownRuleException;
+use Khalyomede\RegExp;
+use stdClass;
 
 /**
  * Validate arrays, objects, strings, ...
@@ -18,6 +20,7 @@ class Validator {
     const RULE_ARRAY = 'array';
     const RULE_REQUIRED = 'required';
     const RULE_FILLED = 'filled';
+    const RULE_UPPER = 'upper';
 
     /**
      * Contains the rules for validating an array.
@@ -36,7 +39,7 @@ class Validator {
     /**
      * Stores every failures caracterized by the key that caused the failure and the rule that failed to pass.
      * 
-     * @var array<array>
+     * @var array<stdClass>
      */
     protected $failures;
 
@@ -117,6 +120,11 @@ class Validator {
                         $this->_addFailure();
                     }
                 }
+                else if( $rule === static::RULE_UPPER ) {
+                    if( is_string($value) === false || preg_match(RegExp::NOT_UPPER, $value) === 1 ) {
+                        $this->_addFailure();
+                    }
+                }
                 else {
                     $exception = new UnknownRuleException("rule \"$rule\" does not exists");
                     $exception->setRule($rule);
@@ -132,10 +140,10 @@ class Validator {
     /**
      * Stores a failures that is caracterized by the key and the rule.
      * 
-     * @param array<string> $options The key and the rule.
+     * @return void
      */
     private function _addFailure(): void {
-        $failure = new StdClass;
+        $failure = new stdClass;
         $failure->key = $this->currentKey;
         $failure->rule = $this->currentRule;
 
