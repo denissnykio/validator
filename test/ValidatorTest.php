@@ -43,6 +43,14 @@ class ValidatorTest extends TestCase {
         $this->assertEquals($validator->failed(), true);
     }
 
+    public function testFailingFilled2() {
+        $validator = new Validator(['name' => ['filled']]);
+
+        $validator->validate(['name' => null]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
     public function testUpper() {
         $validator = new Validator(['name' => ['upper']]);
 
