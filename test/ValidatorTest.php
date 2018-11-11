@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class ValidatorTest extends TestCase {
+    // string
     public function testString() {
         $validator = new Validator(['name' => ['string']]);
 
@@ -11,6 +12,15 @@ class ValidatorTest extends TestCase {
         $this->assertEquals($validator->failed(), false);
     }
 
+    public function testFailingString() {
+        $validator = new Validator(['name' => ['string']]);
+
+        $validator->validate(['name' => 42]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    // array
     public function testArray() {
         $validator = new Validator(['hobbies' => ['array']]);
 
@@ -19,6 +29,15 @@ class ValidatorTest extends TestCase {
         $this->assertEquals($validator->failed(), false);
     }
 
+    public function testFailingArray() {
+        $validator = new Validator(['hobbies' => ['array']]);
+
+        $validator->validate(['hobbies' => 'programming, TV shows, workout']);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    // required
     public function testRequired() {
         $validator = new Validator(['name' => ['required']]);
 
@@ -43,6 +62,7 @@ class ValidatorTest extends TestCase {
         $this->assertEquals($validator->failed(), true);
     }
 
+    // filled
     public function testFilled() {
         $validator = new Validator(['name' => ['filled']]);
 
@@ -67,6 +87,7 @@ class ValidatorTest extends TestCase {
         $this->assertEquals($validator->failed(), true);
     }
 
+    // upper
     public function testUpper() {
         $validator = new Validator(['name' => ['upper']]);
 
