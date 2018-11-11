@@ -58,6 +58,13 @@ class Validator {
     protected $currentRule;
 
     /**
+     * Stores the current value that is being validated.
+     * 
+     * @var string
+     */
+    protected $currentValue;
+
+    /**
      * Constructor.
      * 
      * @param array $rules 
@@ -73,6 +80,9 @@ class Validator {
         $this->rules = $rules;
         $this->failed = false;
         $this->failures = [];
+        $this->currentKey = '';
+        $this->currentRule = '';
+        $this->currentValue = '';
     }
 
     /**
@@ -100,30 +110,15 @@ class Validator {
             foreach( $rules as $rule ) {
                 $this->currentRule = $rule;
 
-                if( $rule === static::RULE_STRING ) {
-                    if( is_string($value) === false ) {
-                        $this->_addFailure();
-                    }
-                }
-                else if( $rule === static::RULE_ARRAY ) {
-                    if( is_array($value) === false ) {
-                        $this->_addFailure();
-                    }
-                }
-                else if( $rule === static::RULE_REQUIRED ) {
-                    if( isset($items[$key]) === false ) {
-                        $this->_addFailure();
-                    }
-                }
-                else if( $rule === static::RULE_FILLED ) {
-                    if( isset($items[$key]) === false || empty($value) === true ) {
-                        $this->_addFailure();
-                    }
-                }
-                else if( $rule === static::RULE_UPPER ) {
-                    if( is_string($value) === false || preg_match(RegExp::NOT_UPPER, $value) === 1 ) {
-                        $this->_addFailure();
-                    }
+                if( 
+                    ($rule === static::RULE_STRING && is_string($value) === false) ||
+                    ($rule === static::RULE_ARRAY && is_array($value) === false) ||
+                    ($rule === static::RULE_REQUIRED && isset($items[$key]) === false) ||
+                    ($rule === static::RULE_FILLED && isset($items[$key]) === false || empty($value) === true) ||
+                    ($rule === static::RULE_UPPER && is_string($value) === false || preg_match(RegExp::NOT_UPPER, $value) === 1) ||
+                    ($rule === static::RULE_EMAIL && is_string($value) === false || filter_var($value, FILTER_VALIDATE_EMAIL) === false)
+                ) {
+                    $this->_addFailure();
                 }
                 else {
                     $exception = new UnknownRuleException("rule \"$rule\" does not exists");
