@@ -38,6 +38,7 @@ composer require khalyomede\validator:0.*
 
 - [Example 1: validating a string](#example-1-validating-a-string)
 - [Example 2: validating a required element](#example-2-validating-a-required-element)
+- [Example 3: add a new rule](#example-3-add-a-new-rule)
 
 ### Example 1: validating a string
 
@@ -45,7 +46,7 @@ composer require khalyomede\validator:0.*
 require __DIR__ . '/../vendor/autoload.php';
 
 use Khalyomede\Validator;
-use Khalyomede\Exception\UnknownRuleException;
+use Khalyomede\Exception\RuleNotFoundException;
 
 $validator = new Validator([
   'name' => ['string']
@@ -56,7 +57,7 @@ try {
 
   var_dump($validator->failed()); // false
 }
-catch( UnknownRuleException $exception ) {
+catch( RuleNotFoundException $exception ) {
   echo "rule {$exception->getRule()} does not exists";
 
   exit(1);
@@ -69,7 +70,7 @@ catch( UnknownRuleException $exception ) {
 require __DIR__ . '/../vendor/autoload.php';
 
 use Khalyomede\Validator;
-use Khalyomede\Exception\UnknownRuleException;
+use Khalyomede\Exception\RuleNotFoundException;
 
 $validator = new Validator(['name' => ['required', 'string']]);
 
@@ -78,16 +79,53 @@ try {
 
     var_dump($validator->failed()); // false
 }
-catch( UnknownRuleException $exception ) {
+catch( RuleNotFoundException $exception ) {
     echo "rule {$exception->getRule()} does not exist";
 
     exit(1);
 }
 ```
 
+### Example 3: add a new rule
+
+```php
+equire __DIR__ . '/../vendor/autoload.php';
+
+use Khalyomede\Validator;
+use Khalyomede\Exception\RuleAlreadyExistException;
+use Khalyomede\Exception\RuleNotFoundException;
+
+try {
+  Validator::extends('longitude', function($value, $key, $items) {
+    return is_float($value) && ($value >= -180) && ($value <= 180);
+  });
+}
+catch( RuleAlreadyExistException $exception ) {
+  echo "rule {$exception->getRule()} already exist";
+
+  exit(1);
+}
+
+$validator = new Validator([
+  'lon' => ['longitude']
+]);
+
+try {
+  $validator->validate(['lon' => 34.00000000]);
+
+  var_dump($validator->failed()); // false
+}
+catch( RuleNotFoundException $exception ) {
+  echo "rule {$exception->getRule()} does not exist";
+
+  exit(2);
+}
+```
+
 ## Rules
 
 - [array](#array)
+- [email](#email)
 - [filled](#filled)
 - [required](#required)
 - [string](#string)
@@ -100,6 +138,16 @@ Validate that a key is an array.
 ```php
 $validator = new Validator([
     'hobbies' => ['array']
+]);
+```
+
+### email
+
+Validate that a key is filled with an email.
+
+```php
+$validator = new Validator([
+    'contact' => ['email']
 ]);
 ```
 
