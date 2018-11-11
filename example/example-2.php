@@ -11,12 +11,12 @@ $validator = new Validator(['name' => ['required', 'string']]);
 
 try {
     $validator->validate(['name' => 'John']);
-
-    var_dump($validator->failed()); // false
 }
 catch( UnknownRuleException $exception ) {
     echo "rule {$exception->getRule()} does not exist";
-
+    
     exit(1);
 }
+
+var_dump($validator->failed()); // false
 ?>
