@@ -1,22 +1,35 @@
 <?php
 namespace Khalyomede;
 
-use Khalyomede\Exception\UnknownRuleException;
+use Khalyomede\Exception\RuleNotFoundException;
+use Khalyomede\Exception\RuleAlreadyExistException;
 use Khalyomede\RegExp;
 use Khalyomede\Rule;
 use stdClass;
+use InvalidArgumentException;
 
 /**
  * Validate arrays, objects, strings, ...
  * 
- * @example 
- * $validator = new Validator([
- *  'name' => ['string'],
- *  'hobbies' => ['array'],
- *  'hobbies.*' => ['string']     
- * ]);
+ * @category Class
+ * 
+ * @package Validator
+ * 
+ * @author Khalyomede <khalyomede@gmail.com>
+ * 
+ * @license https://opensource.org/licenses/MIT MIT
+ * 
+ * @link https://github.com/khalyomede/validator/blob/master/src/Validator.php
  */
-class Validator {
+class Validator
+{
+    /**
+     * Rules added by the user.
+     * 
+     * @var array<mixed>
+     */
+    protected static $extendedRules = [];
+
     /**
      * Contains the rules for validating an array.
      * 
@@ -41,7 +54,7 @@ class Validator {
     /**
      * Stores the key and their values to validate.
      * 
-     * @var array<array>
+     * @var array<string,mixed>
      */
     protected $itemsToValidate;
 
@@ -69,16 +82,10 @@ class Validator {
     /**
      * Constructor.
      * 
-     * @param array $rules 
-     *
-     * @example
-     * $validator = new Validator([
-     * 'name' => ['string'],
-     *  'hobbies' => ['array'],
-     *  'hobbies.*' => ['string']     
-     * ]);
+     * @param array $rules The rules for validating the array.
      */
-    public function __construct(array $rules) {
+    public function __construct(array $rules) 
+    {
         $this->rules = $rules;
         $this->failed = false;
         $this->failures = [];
@@ -91,49 +98,47 @@ class Validator {
     /**
      * Validate an array against some rules.
      * 
-     * @param array<array> $items The array to validate.
+     * @param array<string,mixed> $items The array to validate.
      * 
      * @return self
-     * 
-     * @example
-     * $validator = new Validator([
-     * 'name' => ['string'],
-     *  'hobbies' => ['array'],
-     *  'hobbies.*' => ['string']
-     * ]);
-     * 
-     * $validator->validate(['name' => 'John', 'hobbies' => ['programming', 'TV shows', 'workout']]);
      */
-    public function validate(array $items): self {
+    public function validate(array $items): self 
+    {
         $this->itemsToValidate = $items;
 
-        $availableRules = Rule::all();
+        $availableRules = static::_rules();
 
-        foreach( $this->rules as $key => $rules ) {
+        foreach ($this->rules as $key => $rules) {
             $this->currentKey = $key;
             $this->currentValue = $items[$key] ?? null;
 
-            foreach( $rules as $rule ) {
-                if( in_array($rule, $availableRules) === false ) {
-                    $exception = new UnknownRuleException("rule \"$rule\" does not exists");
+            foreach ($rules as $rule) {
+                if (in_array($rule, $availableRules) === false) {
+                    $exception = new RuleNotFoundException("rule \"$rule\" does not exists");
                     $exception->setRule($rule);
 
                     throw $exception;
                 }
             }
             
-            foreach( $rules as $rule ) {
+            foreach ($rules as $rule) {
                 $this->currentRule = $rule;
 
-                if( 
-                    ($this->_currentRuleIs(Rule::STRING) && $this->_stringRuleFails() === true) ||
-                    ($this->_currentRuleIs(Rule::ARRAY) && $this->_arrayRuleFails() === true) ||
-                    ($this->_currentRuleIs(Rule::REQUIRED) && $this->_requiredRuleFails() === true) ||
-                    ($this->_currentRuleIs(Rule::FILLED) && $this->_filledRuleFails() === true) ||
-                    ($this->_currentRuleIs(Rule::UPPER) && $this->_upperRuleFails() === true) ||
-                    ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
+                if (($this->_currentRuleIs(Rule::STRING) && $this->_stringRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::ARRAY) && $this->_arrayRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::REQUIRED) && $this->_requiredRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::FILLED) && $this->_filledRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::UPPER) && $this->_upperRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
                 ) {
                     $this->_addFailure();
+                }
+                else {
+                    foreach (static::$extendedRules as $extendedRule => $closure) {
+                        if ($this->_currentRuleIs($extendedRule) && call_user_func($closure, $this->currentValue, $this->currentKey, $this->itemsToValidate) !== true) {
+                            $this->_addFailure();
+                        }
+                    }
                 }
             }
         }
@@ -142,11 +147,36 @@ class Validator {
     }
 
     /**
+     * Add a new rule.
+     * 
+     * @param string   $ruleName The name of the rule.
+     * @param callable $function Closure that should return true if the test pass, else false.
+     * 
+     * @return void
+     * 
+     * @throws RuleAlreadyExistException
+     * 
+     * @throws InvalidArgumentException
+     */
+    public static function extends(string $ruleName, callable $function): void 
+    {
+        if (in_array($ruleName, static::_rules()) === true) {
+            $exception = new RuleAlreadyExistException("rule $ruleName already exists");
+            $exception->setRule($ruleName);
+
+            throw $exception;
+        }
+
+        static::$extendedRules[$ruleName] = $function;
+    }
+
+    /**
      * Stores a failures that is caracterized by the key and the rule.
      * 
      * @return void
      */
-    private function _addFailure(): void {
+    private function _addFailure(): void 
+    {
         $failure = new stdClass;
         $failure->key = $this->currentKey;
         $failure->rule = $this->currentRule;
@@ -158,19 +188,9 @@ class Validator {
      * Returns true if the validation failed.
      * 
      * @return bool
-     * 
-     * @example
-     * $validator = new Validator([
-     * 'name' => ['string'],
-     *  'hobbies' => ['array'],
-     *  'hobbies.*' => ['string']
-     * ]);
-     * 
-     * $validator->validate(['name' => 'John', 'hobbies' => ['programming', 'TV shows', 'workout']]);
-     * 
-     * var_dump($validator->failed()); // false
      */
-    public function failed(): bool {
+    public function failed(): bool 
+    {
         return count($this->failures) > 0;
     }
 
@@ -183,32 +203,79 @@ class Validator {
      * 
      * @return bool.
      */
-    private function _currentRuleIs(string $rule): bool {
+    private function _currentRuleIs(string $rule): bool 
+    {
         return $this->currentRule === $rule;
     }
 
-    private function _stringRuleFails(): bool {
+    /**
+     * Return true if the validation against string rule failed.
+     * 
+     * @return bool
+     */
+    private function _stringRuleFails(): bool 
+    {
         return is_string($this->currentValue) === false;
     }
 
-    private function _arrayRuleFails(): bool {
+    /**
+     * Returns true if the validation against array rule failed.
+     * 
+     * @return bool
+     */
+    private function _arrayRuleFails(): bool 
+    {
         return is_array($this->currentValue) === false;
     }
 
-    private function _requiredRuleFails(): bool {
+    /**
+     * Returns true if the validation against array rule failed.
+     * 
+     * @return bool
+     */
+    private function _requiredRuleFails(): bool 
+    {
         return isset($this->itemsToValidate[$this->currentKey]) === false;
     }
 
-    private function _filledRuleFails(): bool {
+    /**
+     * Returns true fi the validation against filled rule failed.
+     * 
+     * @return bool
+     */
+    private function _filledRuleFails(): bool 
+    {
         return isset($this->itemsToValidate[$this->currentKey]) === false || empty($this->currentValue) === true;
     }
 
-    private function _upperRuleFails(): bool {
+    /**
+     * Returns true if the validation against upper rule failed.
+     * 
+     * @return bool
+     */
+    private function _upperRuleFails(): bool 
+    {
         return is_string($this->currentValue) === false || preg_match(RegExp::NOT_UPPER, $this->currentValue) === 1;
     }
 
-    private function _emailRuleFails(): bool {
+    /**
+     * Returns true if the validation against email rule failed.
+     * 
+     * @return bool
+     */
+    private function _emailRuleFails(): bool 
+    {
         return is_string($this->currentValue) === false || filter_var($this->currentValue, FILTER_VALIDATE_EMAIL) === false;
+    }
+
+    /**
+     * Returns the available rules plus the extended rules.
+     * 
+     * @return array<string>
+     */
+    private static function _rules(): array 
+    {
+        return array_merge(Rule::all(), array_keys(static::$extendedRules));
     }
 }
 ?>
