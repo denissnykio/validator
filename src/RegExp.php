@@ -12,6 +12,8 @@ namespace Khalyomede;
  * 
  * @license https://opensource.org/licenses/MIT MIT
  * 
+ * @link https://github.com/khalyomede/validator/blob/master/src/RegExp.php
+ * 
  * @example 
  * $regexp = RegExp::UPPER;
  */
