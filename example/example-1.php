@@ -5,7 +5,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use Khalyomede\Validator;
-use Khalyomede\Exception\UnknownRuleException;
+use Khalyomede\Exception\RuleNotFoundException;
 
 $validator = new Validator([
     'name' => ['string']
@@ -14,7 +14,7 @@ $validator = new Validator([
 try {
     $validator->validate(['name' => 'John']);
 }
-catch( UnknownRuleException $exception ) {
+catch( RuleNotFoundException $exception ) {
     echo "rule {$exception->getRule()} does not exists";
     
     exit(1);
