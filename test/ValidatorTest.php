@@ -146,6 +146,7 @@ class ValidatorTest extends TestCase {
         $this->assertEquals($validator->failed(), true);
     }
 
+    // extends
     public function testExtends() {        
         Validator::extends('url', function($value, $key, $items) {
             return filter_var($value, FILTER_VALIDATE_URL) !== false;
@@ -184,6 +185,15 @@ class ValidatorTest extends TestCase {
         Validator::extends('string', function($value, $key, $items) {
             return isset($items[$key]) === true && is_string($value) === true;
         });
+    }
+
+    // has
+    public function testHash() {
+        $this->assertEquals(Validator::has('string'), true);
+    }
+
+    public function testFailingHas() {
+        $this->assertEquals(Validator::has('shinigami'), false);
     }
 }
 ?>
