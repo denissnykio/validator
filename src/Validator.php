@@ -130,6 +130,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::FILLED) && $this->_filledRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::UPPER) && $this->_upperRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::INTEGER) && $this->_integerRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -266,6 +267,15 @@ class Validator
     private function _emailRuleFails(): bool 
     {
         return is_string($this->currentValue) === false || filter_var($this->currentValue, FILTER_VALIDATE_EMAIL) === false;
+    }
+
+    /**
+     * Returns true if the validation against integer rule failed.
+     * 
+     * @return bool
+     */
+    private function _integerRuleFails(): bool {
+        return is_int($this->currentValue) === false;
     }
 
     /**
