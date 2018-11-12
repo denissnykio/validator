@@ -220,5 +220,30 @@ class ValidatorTest extends TestCase {
 
         $this->assertEquals($validator->failed(), true);
     }
+
+    // lower
+    public function testLower() {
+        $validator = new Validator([
+            'words' => ['lower']
+        ]);
+
+        $validator->validate([
+            'words' => 'php 7.4 rocks!'
+        ]);
+
+        $this->assertEquals($validator->failed(), false);
+    }
+
+    public function testFailingLower() {
+        $validator = new Validator([
+            'words' => ['lower']
+        ]);
+
+        $validator->validate([
+            'words' => 'PHP 7.4 rocks!'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
 }
 ?>
