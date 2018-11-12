@@ -20,5 +20,6 @@ namespace Khalyomede;
 class RegExp {
     const UPPER = '/[[:upper:]]/';
     const NOT_UPPER = '/[[:lower:]]/';
+    const NOT_LOWER = '/[[:upper:]]/';
 }
 ?>
