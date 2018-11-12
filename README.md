@@ -25,6 +25,7 @@ var_dump($validator->failed()); // false
 - [Installation](#installation)
 - [Examples](#examples)
 - [Rules](#rules)
+- [Helpers](#helpers)
 
 ## Installation
 
@@ -39,6 +40,7 @@ composer require khalyomede\validator:0.*
 - [Example 1: validating a string](#example-1-validating-a-string)
 - [Example 2: validating a required element](#example-2-validating-a-required-element)
 - [Example 3: add a new rule](#example-3-add-a-new-rule)
+- [Example 4: check if a rule already exist or not](#example-4-check-if-a-rule-already-exist-or-not)
 
 ### Example 1: validating a string
 
@@ -122,6 +124,30 @@ catch( RuleNotFoundException $exception ) {
 }
 ```
 
+### Example 4: check if a rule already exist or not
+
+```php
+require __DIR__ . '/../vendor/autoload.php';
+
+use Khalyomede\Validator;
+
+if (Validator::has('ip') === false) {
+  Validator::extends('ip', function($value, $key, $items) {
+    return filter_var($value, FILTER_VALIDATE_IP) !== false;
+  });
+}
+
+$validator = new Validator([
+  'client' => ['ip']
+]);
+
+$validator->validate([
+  'client' => '192.168.0.1'
+]);
+
+var_dump($validator->failed()); // bool(false)
+```
+
 ## Rules
 
 - [array](#array)
@@ -189,4 +215,27 @@ Validate that a string is only in uppercase.
 $validator = new Validator([
     'name' => ['uppercase']
 ]);
+```
+
+## Helpers
+
+- [extends](#extends)
+- [has](#has)
+
+### extends
+
+Add a new rule.
+
+```php
+Validator::extends('jedi', function($value, $key, $items) {
+    return in_array($value, ['qui-gon jinn', 'obiwan', 'luke']);
+});
+```
+
+### has
+
+Check if the rule already exist.
+
+```php
+Validator::has('sith'); // bool(false)
 ```
