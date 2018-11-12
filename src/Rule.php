@@ -23,6 +23,7 @@ class Rule {
     const FILLED = 'filled';
     const UPPER = 'upper';
     const EMAIL = 'email';
+    const INTEGER = 'integer';
 
     /**
      * Returns all the rules.
