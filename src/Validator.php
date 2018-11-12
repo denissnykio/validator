@@ -131,6 +131,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::UPPER) && $this->_upperRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::INTEGER) && $this->_integerRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::LOWER) && $this->_lowerRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -276,6 +277,15 @@ class Validator
      */
     private function _integerRuleFails(): bool {
         return is_int($this->currentValue) === false;
+    }
+
+    /**
+     * Returns true if the validation against lower rule failed.
+     * 
+     * @return bool
+     */
+    private function _lowerRuleFails(): bool {
+        return is_string($this->currentValue) === false || preg_match(RegExp::NOT_LOWER, $this->currentValue) === 1;
     }
 
     /**
