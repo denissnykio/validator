@@ -195,5 +195,30 @@ class ValidatorTest extends TestCase {
     public function testFailingHas() {
         $this->assertEquals(Validator::has('shinigami'), false);
     }
+
+    // integer
+    public function testInteger() {
+        $validator = new Validator([
+            'age' => ['integer']
+        ]);
+
+        $validator->validate([
+            'age' => 42
+        ]);
+        
+        $this->assertEquals($validator->failed(), false);
+    }
+
+    public function testFailingInteger() {
+        $validator = new Validator([
+            'age' => ['integer']
+        ]);
+
+        $validator->validate([
+            'age' => 'fourty two'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
 }
 ?>
