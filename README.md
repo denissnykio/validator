@@ -153,6 +153,7 @@ var_dump($validator->failed()); // bool(false)
 - [array](#array)
 - [email](#email)
 - [filled](#filled)
+- [integer](#integer)
 - [required](#required)
 - [string](#string)
 - [upper](#upper)
@@ -184,6 +185,16 @@ Validate that a key is filled with a non empty value.
 ```php
 $validator = new Validator([
     'name' => ['filled']
+]);
+```
+
+### integer
+
+Validate that a key is filled with an integer.
+
+```php
+$validator = new Validator([
+    'age' => ['integer']
 ]);
 ```
 
