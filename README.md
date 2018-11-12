@@ -154,6 +154,7 @@ var_dump($validator->failed()); // bool(false)
 - [email](#email)
 - [filled](#filled)
 - [integer](#integer)
+- [lower](#lower)
 - [required](#required)
 - [string](#string)
 - [upper](#upper)
@@ -195,6 +196,16 @@ Validate that a key is filled with an integer.
 ```php
 $validator = new Validator([
     'age' => ['integer']
+]);
+```
+
+### lower
+
+Validate that a key is filled only with lowercases (non-alpha characters are allowed as well).
+
+```php
+$validator = new Validator([
+    'street' => ['lower']
 ]);
 ```
 
