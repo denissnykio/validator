@@ -277,5 +277,16 @@ class Validator
     {
         return array_merge(Rule::all(), array_keys(static::$extendedRules));
     }
+
+    /**
+     * Returns true if the rule exist or has been added, else returns false.
+     * 
+     * @param string $rule The rule to check.
+     * 
+     * @return bool
+     */
+    public static function has(string $rule): bool {
+        return in_array($rule, static::_rules());
+    }
 }
 ?>
