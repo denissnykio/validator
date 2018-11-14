@@ -7,6 +7,7 @@ use Khalyomede\RegExp;
 use Khalyomede\Rule;
 use stdClass;
 use InvalidArgumentException;
+use DateTime;
 
 /**
  * Validate arrays, objects, strings, ...
@@ -133,6 +134,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::INTEGER) && $this->_integerRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::LOWER) && $this->_lowerRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::SLUG) && $this->_slugRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::DATE) && $this->_dateRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -294,6 +296,10 @@ class Validator
      */
     private function _slugRuleFails(): bool {
         return is_string($this->currentValue) === false || preg_match(RegExp::NOT_SLUG, $this->currentValue) === 1;
+    }
+
+    private function _dateRuleFails(): bool {
+        return is_string($this->currentValue) === false || DateTime::createFromFormat('Y-m-d', $this->currentValue) === false || @strtotime($this->currentValue) === false;
     }
 
     /**
