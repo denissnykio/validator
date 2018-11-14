@@ -135,6 +135,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::LOWER) && $this->_lowerRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::SLUG) && $this->_slugRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::DATE) && $this->_dateRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::DATETIME) && $this->_datetimeRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -293,13 +294,29 @@ class Validator
 
     /**
      * Returns true if the validation against slug rule failed.
+     * 
+     * @return bool
      */
     private function _slugRuleFails(): bool {
         return is_string($this->currentValue) === false || preg_match(RegExp::NOT_SLUG, $this->currentValue) === 1;
     }
 
+    /**
+     * Returns true if the validation against a date rule failed.
+     * 
+     * @return bool
+     */
     private function _dateRuleFails(): bool {
         return is_string($this->currentValue) === false || DateTime::createFromFormat('Y-m-d', $this->currentValue) === false || @strtotime($this->currentValue) === false;
+    }
+
+    /**
+     * Returns true if the validation against a datetime rule failed.
+     * 
+     * @return bool
+     */
+    private function _datetimeRuleFails(): bool {
+        return is_string($this->currentValue) === false || DateTime::createFromFormat('Y-m-d H:i:s', $this->currentValue) === false || @strtotime($this->currentValue) === false;
     }
 
     /**
