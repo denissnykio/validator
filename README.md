@@ -124,6 +124,7 @@ if (Validator::has('ip') === false) {
 ## Rules
 
 - [array](#array)
+- [date](#date)
 - [email](#email)
 - [filled](#filled)
 - [integer](#integer)
@@ -140,6 +141,16 @@ Validate that a key is an array.
 ```php
 $validator = new Validator([
     'hobbies' => ['array']
+]);
+```
+
+### date
+
+Validate that a key is filled with a validate date in format `yyyy-mm-dd` ([ISO 8601](https://www.iso.org/standard/40874.html)).
+
+```php
+$validator = new Validator([
+    'created_at' => ['date']
 ]);
 ```
 
