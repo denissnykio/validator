@@ -132,6 +132,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::INTEGER) && $this->_integerRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::LOWER) && $this->_lowerRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::SLUG) && $this->_slugRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -286,6 +287,13 @@ class Validator
      */
     private function _lowerRuleFails(): bool {
         return is_string($this->currentValue) === false || preg_match(RegExp::NOT_LOWER, $this->currentValue) === 1;
+    }
+
+    /**
+     * Returns true if the validation against slug rule failed.
+     */
+    private function _slugRuleFails(): bool {
+        return is_string($this->currentValue) === false || preg_match(RegExp::NOT_SLUG, $this->currentValue) === 1;
     }
 
     /**
