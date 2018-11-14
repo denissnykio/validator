@@ -21,5 +21,12 @@ class RegExp {
     const UPPER = '/[[:upper:]]/';
     const NOT_UPPER = '/[[:lower:]]/';
     const NOT_LOWER = '/[[:upper:]]/';
+    
+    /** 
+     * Tests for "not slug" regexp.
+     * 
+     * @see https://regex101.com/r/7EuROf/1/tests 
+     */
+    const NOT_SLUG = '/[^a-z-0-9]/'; 
 }
 ?>
