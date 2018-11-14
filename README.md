@@ -241,7 +241,7 @@ Validate that a string is only in uppercase.
 
 ```php
 $validator = new Validator([
-    'name' => ['uppercase']
+    'name' => ['upper']
 ]);
 ```
 
