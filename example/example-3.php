@@ -18,19 +18,4 @@ catch( RuleAlreadyExistException $exception ) {
 
     exit(1);
 }
-
-$validator = new Validator([
-    'lon' => ['longitude']
-]);
-
-try {
-    $validator->validate(['lon' => 34.00000000]);
-
-    var_dump($validator->failed()); // false
-}
-catch( RuleNotFoundException $exception ) {
-    echo "rule {$exception->getRule()} does not exist";
-
-    exit(2);
-}
 ?>
