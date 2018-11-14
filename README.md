@@ -125,6 +125,7 @@ if (Validator::has('ip') === false) {
 
 - [array](#array)
 - [date](#date)
+- [datetime](#datetime)
 - [email](#email)
 - [filled](#filled)
 - [integer](#integer)
@@ -146,11 +147,21 @@ $validator = new Validator([
 
 ### date
 
-Validate that a key is filled with a validate date in format `yyyy-mm-dd` ([ISO 8601](https://www.iso.org/standard/40874.html)).
+Validate that a key is filled with a valid date in format `yyyy-mm-dd` ([ISO 8601](https://www.iso.org/standard/40874.html)).
 
 ```php
 $validator = new Validator([
     'created_at' => ['date']
+]);
+```
+
+### datetime
+
+Validate that a key is filled with a valid date in formt `yyyy-mm-dd` ([ISO 8601](https://www.iso.org/standard/40874.html)).
+
+```php
+$validator = new Validator([
+    'updated_at' => ['datetime']
 ]);
 ```
 
