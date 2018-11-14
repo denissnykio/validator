@@ -26,6 +26,7 @@ class Rule {
     const INTEGER = 'integer';
     const LOWER = 'lower';
     const SLUG = 'slug';
+    const DATE = 'date';
 
     /**
      * Returns all the rules.
