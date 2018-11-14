@@ -25,6 +25,7 @@ class Rule {
     const EMAIL = 'email';
     const INTEGER = 'integer';
     const LOWER = 'lower';
+    const SLUG = 'slug';
 
     /**
      * Returns all the rules.
