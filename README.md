@@ -129,6 +129,7 @@ if (Validator::has('ip') === false) {
 - [integer](#integer)
 - [lower](#lower)
 - [required](#required)
+- [slug](#slug)
 - [string](#string)
 - [upper](#upper)
 
@@ -189,6 +190,16 @@ Validate that a key is present. The key can be empty by the way.
 ```php
 $validator = new Validator([
     'name' => ['required']
+]);
+```
+
+### slug
+
+Validate that a string is a slug (only lowercases, dashes `-` allowed).
+
+```php
+$validator = new Validator([
+    'title' => ['slug']
 ]);
 ```
 
