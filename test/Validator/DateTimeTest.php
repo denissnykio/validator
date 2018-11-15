@@ -134,5 +134,89 @@ class DateTimeTest extends TestCase {
 
         $this->assertEquals($validator->failed(), true);
     }
+
+    public function testFailingDateTIme11() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-11-14 22:50:0'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDateTime12() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-11-14 22:5:00'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDateTime13() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-11-14 2:50:00'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDateTime14() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-11-1 22:50:00'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDateTime15() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-1-14 22:50:00'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDateTime16() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-1-1 22:50:00'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDateTime17() {
+        $validator = new Validator([
+            'updated_at' => ['datetime']
+        ]);
+
+        $validator->validate([
+            'updated_at' => '2018-1-14 2:50:00'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
 }
 ?>
