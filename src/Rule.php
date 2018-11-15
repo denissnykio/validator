@@ -29,6 +29,7 @@ class Rule {
     const DATE = 'date';
     const DATETIME = 'datetime';
     const TIME = 'time';
+    const PRESENT = 'present';
 
     /**
      * Returns all the rules.
