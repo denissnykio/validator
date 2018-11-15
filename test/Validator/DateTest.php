@@ -98,5 +98,77 @@ class DateTest extends TestCase {
 
         $this->assertEquals($validator->failed(), true);
     }
+
+    public function testFailingDate8() {
+        $validator = new Validator([
+            'created_at' => ['date']
+        ]);
+
+        $validator->validate([
+            'created_at' => '2018-11-150'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDate9() {
+        $validator = new Validator([
+            'created_at' => ['date']
+        ]);
+
+        $validator->validate([
+            'created_at' => '2018-110-15'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDate10() {
+        $validator = new Validator([
+            'created_at' => ['date']
+        ]);
+
+        $validator->validate([
+            'created_at' => '2018-110-150'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDate11() {
+        $validator = new Validator([
+            'created_at' => ['date']
+        ]);
+
+        $validator->validate([
+            'created_at' => '2018-1-15'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDate12() {
+        $validator = new Validator([
+            'created_at' => ['date']
+        ]);
+
+        $validator->validate([
+            'created_at' => '2018-11-1'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testFailingDate13() {
+        $validator = new Validator([
+            'created_at' => ['date']
+        ]);
+
+        $validator->validate([
+            'created_at' => '2018-1-1'
+        ]);
+
+        $this->assertEquals($validator->failed(), true);
+    }
 }
 ?>
