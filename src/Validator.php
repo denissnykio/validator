@@ -137,6 +137,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::DATE) && $this->_dateRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::DATETIME) && $this->_datetimeRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::TIME) && $this->_timeRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::PRESENT) && $this->_presentRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -336,6 +337,15 @@ class Validator
             || DateTime::createFromFormat('H:i:s', $this->currentValue) === false 
             || @strtotime($this->currentValue) === false 
             || (DateTime::createFromFormat('H:i:s', $this->currentValue))->format('H:i:s') !== $this->currentValue;
+    }
+
+    /**
+     * Returns true if the validation against a present rule failed.
+     * 
+     * @return bool
+     */
+    private function _presentRuleFails(): bool {
+        return isset($this->itemsToValidate[$this->currentKey]) === false;
     }
 
     /**
