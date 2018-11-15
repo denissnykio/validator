@@ -158,7 +158,7 @@ $validator = new Validator([
 
 ### datetime
 
-Validate that a key is filled with a valid date in formt `yyyy-mm-dd hh:ii:ss` ([ISO 8601](https://www.iso.org/standard/40874.html)).
+Validate that a key is filled with a valid date in formt `yyyy-mm-dd hh:mm:ss` ([ISO 8601](https://www.iso.org/standard/40874.html)).
 
 ```php
 $validator = new Validator([
