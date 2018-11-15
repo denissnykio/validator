@@ -6,12 +6,20 @@ class RequiredTest extends TestCase {
     public function testRequired() {
         $validator = new Validator(['name' => ['required']]);
 
-        $validator->validate(['name' => '']);
+        $validator->validate(['name' => 'John']);
 
         $this->assertEquals($validator->failed(), false);
     }
 
-    public function testfailingRequired() {
+    public function testFailingRequired() {
+        $validator = new Validator(['name' => ['required']]);
+
+        $validator->validate(['name' => '']);
+
+        $this->assertEquals($validator->failed(), true);
+    }
+
+    public function testfailingRequired2() {
         $validator = new Validator(['name' => ['required']]);
 
         $validator->validate(['name' => null]);
@@ -19,7 +27,7 @@ class RequiredTest extends TestCase {
         $this->assertEquals($validator->failed(), true);
     }
 
-    public function testFailingRequired2() {
+    public function testFailingRequired3() {
         $validator = new Validator(['name' => ['required']]);
 
         $validator->validate(['foo' => 'John']);
