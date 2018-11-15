@@ -130,6 +130,7 @@ if (Validator::has('ip') === false) {
 - [filled](#filled)
 - [integer](#integer)
 - [lower](#lower)
+- [present](#present)
 - [required](#required)
 - [slug](#slug)
 - [string](#string)
@@ -204,6 +205,17 @@ Validate that a key is filled only with lowercases (non-alpha characters are all
 $validator = new Validator([
     'street' => ['lower']
 ]);
+```
+
+### present
+
+Validate that a key exists.
+
+```php
+$validator = new Validator([
+    'lastname' => ['present']
+]);
+
 ```
 
 ### required
