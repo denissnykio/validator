@@ -28,6 +28,7 @@ class Rule {
     const SLUG = 'slug';
     const DATE = 'date';
     const DATETIME = 'datetime';
+    const TIME = 'time';
 
     /**
      * Returns all the rules.
