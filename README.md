@@ -133,6 +133,7 @@ if (Validator::has('ip') === false) {
 - [required](#required)
 - [slug](#slug)
 - [string](#string)
+- [time](#time)
 - [upper](#upper)
 
 ### array
@@ -232,6 +233,16 @@ Validate that a key is a string.
 ```php
 $validator = new Validator([
     'name' = ['string']
+]);
+```
+
+### time
+
+Validate that a key is filled with a time with the format `hh:mm:ss`.
+
+```php
+$validator = new Validator([
+    'duration' => ['time']
 ]);
 ```
 
