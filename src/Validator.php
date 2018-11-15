@@ -308,7 +308,10 @@ class Validator
      * @return bool
      */
     private function _dateRuleFails(): bool {
-        return is_string($this->currentValue) === false || DateTime::createFromFormat('Y-m-d', $this->currentValue) === false || @strtotime($this->currentValue) === false;
+        return is_string($this->currentValue) === false 
+            || DateTime::createFromFormat('Y-m-d', $this->currentValue) === false 
+            || @strtotime($this->currentValue) === false
+            || (DateTime::createFromFormat('Y-m-d', $this->currentValue))->format('Y-m-d') !== $this->currentValue;
     }
 
     /**
@@ -317,7 +320,9 @@ class Validator
      * @return bool
      */
     private function _datetimeRuleFails(): bool {
-        return is_string($this->currentValue) === false || DateTime::createFromFormat('Y-m-d H:i:s', $this->currentValue) === false || @strtotime($this->currentValue) === false;
+        return is_string($this->currentValue) === false 
+            || DateTime::createFromFormat('Y-m-d H:i:s', $this->currentValue) === false 
+            || @strtotime($this->currentValue) === false;
     }
 
     /**
@@ -328,7 +333,7 @@ class Validator
     private function _timeRuleFails(): bool {
         return is_string($this->currentValue) === false 
             || DateTime::createFromFormat('H:i:s', $this->currentValue) === false 
-            || strtotime($this->currentValue) === false 
+            || @strtotime($this->currentValue) === false 
             || (DateTime::createFromFormat('H:i:s', $this->currentValue))->format('H:i:s') !== $this->currentValue;
     }
 
