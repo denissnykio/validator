@@ -242,7 +242,7 @@ class Validator
      */
     private function _requiredRuleFails(): bool 
     {
-        return isset($this->itemsToValidate[$this->currentKey]) === false;
+        return isset($this->itemsToValidate[$this->currentKey]) === false || strlen(trim((string) $this->currentValue)) < 1;
     }
 
     /**
