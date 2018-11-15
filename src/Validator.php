@@ -136,6 +136,7 @@ class Validator
                     || ($this->_currentRuleIs(Rule::SLUG) && $this->_slugRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::DATE) && $this->_dateRuleFails() === true)
                     || ($this->_currentRuleIs(Rule::DATETIME) && $this->_datetimeRuleFails() === true)
+                    || ($this->_currentRuleIs(Rule::TIME) && $this->_timeRuleFails() === true)
                 ) {
                     $this->_addFailure();
                 }
@@ -317,6 +318,18 @@ class Validator
      */
     private function _datetimeRuleFails(): bool {
         return is_string($this->currentValue) === false || DateTime::createFromFormat('Y-m-d H:i:s', $this->currentValue) === false || @strtotime($this->currentValue) === false;
+    }
+
+    /**
+     * Returns true if the validation against a time rule failed.
+     * 
+     * @return bool
+     */
+    private function _timeRuleFails(): bool {
+        return is_string($this->currentValue) === false 
+            || DateTime::createFromFormat('H:i:s', $this->currentValue) === false 
+            || strtotime($this->currentValue) === false 
+            || (DateTime::createFromFormat('H:i:s', $this->currentValue))->format('H:i:s') !== $this->currentValue;
     }
 
     /**
