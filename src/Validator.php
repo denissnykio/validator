@@ -322,7 +322,8 @@ class Validator
     private function _datetimeRuleFails(): bool {
         return is_string($this->currentValue) === false 
             || DateTime::createFromFormat('Y-m-d H:i:s', $this->currentValue) === false 
-            || @strtotime($this->currentValue) === false;
+            || @strtotime($this->currentValue) === false
+            || (DateTime::createFromFormat('Y-m-d H:i:s', $this->currentValue))->format('Y-m-d H:i:s') !== $this->currentValue;
     }
 
     /**
