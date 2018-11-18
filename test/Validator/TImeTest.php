@@ -3,268 +3,217 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class TimeTest extends TestCase {
-    public function testTime() {
-        $validator = new Validator([
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator;
+
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator2;
+
+    public function setUp()
+    {
+        $this->validator = new Validator([
             'start' => ['time']
         ]);
 
-        $validator->validate([
+        $this->validator2 = new Validator([
+            'starts.*' => ['time']
+        ]);
+    }
+    
+    public function testTime() {
+        $this->validator->validate([
             'start' => '20:44:09'
         ]);
 
-        $this->assertEquals($validator->failed(), false);
+        $this->assertFalse($this->validator->failed());
+    }
+
+    public function testTimeList() {
+        $this->validator2->validate([
+            'starts' => ['20:44:09', '12:59:00', '05:03:30']
+        ]);
+
+        $this->assertFalse($this->validator2->failed());
     }
 
     public function testFailingTime() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:44:61'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime2() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:61:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime3() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '25:44:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime4() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:61:61'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime5() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '25:44:61'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime6() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '25:61:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime7() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '25:61:61'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime8() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '2018-11-15 20:44:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime9() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => 'bankai'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime10() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => 42
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime11() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:44:09.07258'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime12() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '200:44:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime13() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:440:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime14() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:44:090'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime15() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:44:9'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime16() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:4:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime17() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '2:44:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime18() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '20:4:9'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime19() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '2:44:9'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime20() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '2:4:09'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingTime21() {
-        $validator = new Validator([
-            'start' => ['time']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'start' => '2:4:9'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
+    }
+
+    public function testFailingTimeList() {
+        $this->validator2->validate([
+            'starts' => ['20:44:09', 2018, '05:03:30']
+        ]);
+
+        $this->assertTrue($this->validator2->failed());
     }
 }
 ?>
