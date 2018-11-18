@@ -3,36 +3,66 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class UpperTest extends TestCase {
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator;
+
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator2;
+
+    public function setUp()
+    {
+        $this->validator = new Validator([
+            'name' => ['upper']
+        ]);
+
+        $this->validator2 = new Validator([
+            'names.*' => ['upper']
+        ]);
+    }
+
     public function testUpper() {
-        $validator = new Validator(['name' => ['upper']]);
+        $this->validator->validate(['name' => 'JOHN']);
 
-        $validator->validate(['name' => 'JOHN']);
+        $this->assertFalse($this->validator->failed());
+    }
 
-        $this->assertEquals($validator->failed(), false);
+    public function testUpperList()
+    {
+        $this->validator2->validate([
+            'names' => ['JOHN', 'FOO', 'BAR']
+        ]);
+
+        $this->assertFalse($this->validator2->failed());
     }
 
     public function testFailingUpper() {
-        $validator = new Validator(['name' => ['upper']]);
+        $this->validator->validate(['name' => 'John']);
 
-        $validator->validate(['name' => 'John']);
-
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingUpper2() {
-        $validator = new Validator(['name' => ['upper']]);
+        $this->validator->validate(['name' => 42]);
 
-        $validator->validate(['name' => 42]);
-
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingUpper3() {
-        $validator = new Validator(['name' => ['upper']]);
+        $this->validator->validate(['name' => null]);
 
-        $validator->validate(['name' => null]);
+        $this->assertTrue($this->validator->failed());
+    }
 
-        $this->assertEquals($validator->failed(), true);
+    public function testFailingUpperList() {
+        $this->validator2->validate([
+            'names' => ['John', 'Foo', 'Bar']
+        ]);
+
+        $this->assertTrue($this->validator2->failed());
     }
 }
 ?>
