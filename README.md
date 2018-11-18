@@ -41,6 +41,7 @@ composer require khalyomede\validator:0.*
 - [Example 2: validating a required element](#example-2-validating-a-required-element)
 - [Example 3: add a new rule](#example-3-add-a-new-rule)
 - [Example 4: check if a rule already exist or not](#example-4-check-if-a-rule-already-exist-or-not)
+- [Example 5: using dot syntax to validate multiple elements](#example-5-using-dot-syntax-to-validate-multiple-elements)
 
 ### Example 1: validating a string
 
@@ -119,6 +120,25 @@ use Khalyomede\Validator;
 if (Validator::has('ip') === false) {
   echo "rule ip does not exist yet";
 }
+```
+
+### Example 5: using dot syntax to validate multiple elements
+
+```php
+require __DIR__ . '/../vendor/autoload.php';
+
+use Khalyomede\Validator;
+
+$validator = new Validator([
+    'sith' => ['required', 'array'],
+    'sith.*' => ['string']
+]);
+
+$validator->validate([
+    'sith' => ['Darth Maul', 'Darth Vador', 'Darth Sidious']
+]);
+
+var_dump( $validator->failed() ) // "false", hm... should have been true after all these guys did but anyway
 ```
 
 ## Rules
