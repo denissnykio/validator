@@ -3,36 +3,75 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class RequiredTest extends TestCase {
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator;
+
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator2;
+
+    public function setUp()
+    {
+        $this->validator = new Validator([
+            'name' => ['required']
+        ]);
+
+        $this->validator2 = new Validator([
+            'names.*.origin' => ['required']
+        ]);
+    }
+
     public function testRequired() {
-        $validator = new Validator(['name' => ['required']]);
+        $this->validator->validate(['name' => 'John']);
 
-        $validator->validate(['name' => 'John']);
+        $this->assertFalse($this->validator->failed());
+    }
 
-        $this->assertEquals($validator->failed(), false);
+    public function testRequiredList()
+    {
+        $this->validator2->validate([
+            'names' => [
+                ['name' => 'Ichigo', 'origin' => 'Bleach'],
+                ['name' => 'Naruto', 'origin' => 'Naruto'],
+                ['name' => 'Gon', 'origin' => 'HunterXHunter']
+            ]
+        ]);
+
+        $this->assertFalse($this->validator2->failed());
     }
 
     public function testFailingRequired() {
-        $validator = new Validator(['name' => ['required']]);
+        $this->validator->validate(['name' => '']);
 
-        $validator->validate(['name' => '']);
-
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testfailingRequired2() {
-        $validator = new Validator(['name' => ['required']]);
+        $this->validator->validate(['name' => null]);
 
-        $validator->validate(['name' => null]);
-
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingRequired3() {
-        $validator = new Validator(['name' => ['required']]);
+        $this->validator->validate(['foo' => 'John']);
 
-        $validator->validate(['foo' => 'John']);
+        $this->assertTrue($this->validator->failed());
+    }
 
-        $this->assertEquals($validator->failed(), true);
+    public function testFailingRequiredList()
+    {
+        $this->validator2->validate([
+            'names' => [
+                ['name' => 'Ichigo', 'origin' => 'Bleach'],
+                ['name' => 'Naruto', 'origin'],
+                ['name' => 'Gon', 'origin' => 'HunterXHunter']
+            ]
+        ]);
+
+        $this->assertTrue($this->validator2->failed());
     }
 }
 ?>
