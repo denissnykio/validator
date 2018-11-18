@@ -8,9 +8,18 @@ class PresentTest extends TestCase {
      */
     protected $validator;
 
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator2;
+
     public function setUp() {
         $this->validator = new Validator([
             'lastname' => ['present']
+        ]);
+        
+        $this->validator2 = new Validator([
+            'people.*.lastname' => ['present']
         ]);
     }
 
@@ -19,7 +28,20 @@ class PresentTest extends TestCase {
             'lastname' => ''
         ]);
 
-        $this->assertEquals($this->validator->failed(), false);
+        $this->assertFalse($this->validator->failed());
+    }
+
+    public function testPresentList()
+    {
+        $this->validator2->validate([
+            'people' => [
+                ['firstname' => 'John', 'lastname' => 'Doe'],
+                ['firstname' => 'Foo', 'lastname' => 'Bar'],
+                ['firstname' => 'Foo', 'lastname' => 'Baz']
+            ]
+        ]);
+
+        $this->assertFalse($this->validator2->failed());
     }
 
     public function testPresentWithNullValue()
@@ -38,6 +60,19 @@ class PresentTest extends TestCase {
         ]);
 
         $this->assertTrue($this->validator->failed());
+    }
+
+    public function testFailingPresentList()
+    {
+        $this->validator2->validate([
+            'people' => [
+                ['firstname' => 'John', 'lastname' => 'Doe'],
+                ['firstname' => 'Foo'],
+                ['firstname' => 'Foo', 'lastname' => 'Baz']
+            ]
+        ]);
+
+        $this->assertTrue($this->validator2->failed());
     }
 }
 ?>
