@@ -400,7 +400,21 @@ class Validator
      * @return bool
      */
     private function _presentRuleFails(): bool {
-        return array_key_exists($this->currentKey, $this->itemsToValidate) === false;
+        $fails = false;
+        
+        try {
+            /**
+             * @see https://regex101.com/r/ZDJl53/2
+             */
+            $key = preg_replace('/\*\.(\w+)$/', "{$this->currentIndex}.$1", $this->currentKey);
+
+            array_get($this->itemsToValidate, $key);
+        }
+        catch( OutOfBoundsException $exception ) {
+            $fails = true;
+        }
+
+        return $fails;
     }
 
     /**
