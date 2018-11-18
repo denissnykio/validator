@@ -113,54 +113,74 @@ class Validator
         $availableRules = static::_rules();
 
         foreach ($this->rules as $key => $rules) {
-            $this->currentKey = $key;
+            $this->currentKey = $key;            
             
-            try {
-                $this->currentValue = array_get($this->itemsToValidate, $this->currentKey);
-            }
-            catch( OutOfBoundsException $exception ) {
-                $this->currentValue = null;
-            }
-
             foreach ($rules as $rule) {
                 if (in_array($rule, $availableRules) === false) {
                     $exception = new RuleNotFoundException("rule \"$rule\" does not exists");
                     $exception->setRule($rule);
-
+                    
                     throw $exception;
                 }
+            }
+
+            $values = null;
+            
+            try {
+                $values = array_get($this->itemsToValidate, $this->currentKey);
+            }
+            catch( OutOfBoundsException $exception ) {
+                $values = null;
             }
             
             foreach ($rules as $rule) {
                 $this->currentRule = $rule;
 
-                if (($this->_currentRuleIs(Rule::STRING) && $this->_stringRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::ARRAY) && $this->_arrayRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::REQUIRED) && $this->_requiredRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::FILLED) && $this->_filledRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::UPPER) && $this->_upperRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::INTEGER) && $this->_integerRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::LOWER) && $this->_lowerRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::SLUG) && $this->_slugRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::DATE) && $this->_dateRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::DATETIME) && $this->_datetimeRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::TIME) && $this->_timeRuleFails() === true)
-                    || ($this->_currentRuleIs(Rule::PRESENT) && $this->_presentRuleFails() === true)
-                ) {
-                    $this->_addFailure();
-                }
-                else {
-                    foreach (static::$extendedRules as $extendedRule => $closure) {
-                        if ($this->_currentRuleIs($extendedRule) && call_user_func($closure, $this->currentValue, $this->currentKey, $this->itemsToValidate) !== true) {
-                            $this->_addFailure();
-                        }
+                if (is_array($values) === true && $this->_currentRuleIs(Rule::ARRAY) === false) {
+                    foreach ($values as $value) {
+                        $this->currentValue = $value;
+
+                        $this->_performValidation();
                     }
+                } else {
+                    $this->currentValue = $values;
+
+                    $this->_performValidation();
                 }
             }
         }
 
         return $this;
+    }
+
+    /**
+     * Perform validation according to a key, a rule, a value and the items.
+     * 
+     * @return void
+     */
+    private function _performValidation(): void {
+        if (($this->_currentRuleIs(Rule::STRING) && $this->_stringRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::ARRAY) && $this->_arrayRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::REQUIRED) && $this->_requiredRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::FILLED) && $this->_filledRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::UPPER) && $this->_upperRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::EMAIL) && $this->_emailRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::INTEGER) && $this->_integerRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::LOWER) && $this->_lowerRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::SLUG) && $this->_slugRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::DATE) && $this->_dateRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::DATETIME) && $this->_datetimeRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::TIME) && $this->_timeRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::PRESENT) && $this->_presentRuleFails() === true)
+        ) {
+            $this->_addFailure();
+        } else {
+            foreach (static::$extendedRules as $extendedRule => $closure) {
+                if ($this->_currentRuleIs($extendedRule) && call_user_func($closure, $this->currentValue, $this->currentKey, $this->itemsToValidate) !== true) {
+                    $this->_addFailure();
+                }
+            }
+        }
     }
 
     /**
@@ -232,22 +252,7 @@ class Validator
      */
     private function _stringRuleFails(): bool 
     {
-        $failed = false;
-
-        if( is_array($this->currentValue) === true ) {
-            foreach( $this->currentValue as $value ) {
-                if( is_string($value) === false ) {
-                    $failed = true;
-
-                    break;
-                }
-            }
-        }
-        else {
-            $failed = is_string($this->currentValue) === false;
-        }
-
-        return $failed;
+        return is_string($this->currentValue) === false;
     }
 
     /**
@@ -257,7 +262,7 @@ class Validator
      */
     private function _arrayRuleFails(): bool 
     {
-        return is_array($this->currentValue) === false;
+        return is_array($this->itemsToValidate[$this->currentKey]) === false;
     }
 
     /**
