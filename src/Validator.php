@@ -345,7 +345,7 @@ class Validator
      * @return bool
      */
     private function _presentRuleFails(): bool {
-        return isset($this->itemsToValidate[$this->currentKey]) === false;
+        return array_key_exists($this->currentKey, $this->itemsToValidate) === false;
     }
 
     /**
