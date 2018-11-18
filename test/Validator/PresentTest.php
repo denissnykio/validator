@@ -3,28 +3,41 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class PresentTest extends TestCase {
-    public function testPresent() {
-        $validator = new Validator([
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator;
+
+    public function setUp() {
+        $this->validator = new Validator([
             'lastname' => ['present']
         ]);
+    }
 
-        $validator->validate([
+    public function testPresent() {
+        $this->validator->validate([
             'lastname' => ''
         ]);
 
-        $this->assertEquals($validator->failed(), false);
+        $this->assertEquals($this->validator->failed(), false);
     }
 
-    public function testFailingPresent() {
-        $validator = new Validator([
-            'lastname' => ['present']
+    public function testPresentWithNullValue()
+    {
+        $this->validator->validate([
+            'lastname' => null
         ]);
 
-        $validator->validate([
+        $this->assertFalse($this->validator->failed());
+    }
+
+    public function testFailingPresent()
+    {
+        $this->validator->validate([
             'firstname' => 'John'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 }
 ?>
