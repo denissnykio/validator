@@ -84,6 +84,13 @@ class Validator
     protected $currentValue;
 
     /**
+     * Stores the current index of an array. Useful for required that have to blindly check a row in an array.
+     * 
+     * @var int
+     */
+    protected $currentIndex;
+
+    /**
      * Constructor.
      * 
      * @param array $rules The rules for validating the array.
@@ -137,8 +144,9 @@ class Validator
                 $this->currentRule = $rule;
 
                 if (is_array($values) === true && $this->_currentRuleIs(Rule::ARRAY) === false) {
-                    foreach ($values as $value) {
+                    foreach ($values as $index => $value) {
                         $this->currentValue = $value;
+                        $this->currentIndex = $index;
 
                         $this->_performValidation();
                     }
@@ -271,8 +279,26 @@ class Validator
      * @return bool
      */
     private function _requiredRuleFails(): bool 
-    {
-        return isset($this->itemsToValidate[$this->currentKey]) === false || strlen(trim((string) $this->currentValue)) < 1;
+    {       
+        $fails = false;
+        
+        try {
+            /**
+             * @see https://regex101.com/r/ZDJl53/2
+             */
+            $key = preg_replace('/\*\.(\w+)$/', "{$this->currentIndex}.$1", $this->currentKey);
+
+            $value = array_get($this->itemsToValidate, $key);
+
+            if ((is_string($value) && strlen(trim($value)) < 1) || empty($value) === true) {
+                $fails = true;
+            }
+        }
+        catch( OutOfBoundsException $exception ) {
+            $fails = true;
+        }
+
+        return $fails;
     }
 
     /**
