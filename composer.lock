@@ -4,8 +4,51 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c47dfc22b3d697d9489d163574f3d589",
-    "packages": [],
+    "content-hash": "f13d2473b5e4bc5f3e6576e3745cdcef",
+    "packages": [
+        {
+            "name": "khalyomede/array-get",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/khalyomede/array-get.git",
+                "reference": "96b956dde783c90c23642d5080c28184d13d6243"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/khalyomede/array-get/zipball/96b956dde783c90c23642d5080c28184d13d6243",
+                "reference": "96b956dde783c90c23642d5080c28184d13d6243",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Khalyomede\\": "src"
+                },
+                "files": [
+                    "src/array_get.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Khalyomede",
+                    "email": "khalyomede@gmail.com"
+                }
+            ],
+            "description": "Function to traverse an array using dot and star syntax.",
+            "time": "2018-11-18T08:31:56+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
