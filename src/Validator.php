@@ -308,7 +308,25 @@ class Validator
      */
     private function _filledRuleFails(): bool 
     {
-        return isset($this->itemsToValidate[$this->currentKey]) === false || empty($this->currentValue) === true;
+        $fails = false;
+        
+        try {
+            /**
+             * @see https://regex101.com/r/ZDJl53/2
+             */
+            $key = preg_replace('/\*\.(\w+)$/', "{$this->currentIndex}.$1", $this->currentKey);
+
+            $value = array_get($this->itemsToValidate, $key);
+
+            if ((is_string($value) && strlen(trim($value)) < 1) || empty($value) === true) {
+                $fails = true;
+            }
+        }
+        catch( OutOfBoundsException $exception ) {
+            $fails = false;
+        }
+
+        return $fails;
     }
 
     /**
