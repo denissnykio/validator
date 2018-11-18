@@ -8,6 +8,9 @@ use Khalyomede\Rule;
 use stdClass;
 use InvalidArgumentException;
 use DateTime;
+use OutOfBoundsException;
+
+use function Khalyomede\array_get;
 
 /**
  * Validate arrays, objects, strings, ...
@@ -111,7 +114,13 @@ class Validator
 
         foreach ($this->rules as $key => $rules) {
             $this->currentKey = $key;
-            $this->currentValue = $items[$key] ?? null;
+            
+            try {
+                $this->currentValue = array_get($this->itemsToValidate, $this->currentKey);
+            }
+            catch( OutOfBoundsException $exception ) {
+                $this->currentValue = null;
+            }
 
             foreach ($rules as $rule) {
                 if (in_array($rule, $availableRules) === false) {
@@ -223,7 +232,22 @@ class Validator
      */
     private function _stringRuleFails(): bool 
     {
-        return is_string($this->currentValue) === false;
+        $failed = false;
+
+        if( is_array($this->currentValue) === true ) {
+            foreach( $this->currentValue as $value ) {
+                if( is_string($value) === false ) {
+                    $failed = true;
+
+                    break;
+                }
+            }
+        }
+        else {
+            $failed = is_string($this->currentValue) === false;
+        }
+
+        return $failed;
     }
 
     /**
