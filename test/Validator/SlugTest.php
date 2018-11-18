@@ -4,39 +4,66 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class SlugTest extends TestCase {
-    public function testSlug() {
-        $validator = new Validator([
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator;
+
+    /**
+     * @var Khayomede\Validator
+     */
+    protected $validator2;
+
+    public function setUp()
+    {
+        $this->validator = new Validator([
             'title' => ['slug']
         ]);
 
-        $validator->validate([
+        $this->validator2 = new Validator([
+            'titles.*' => ['slug']
+        ]);
+    }
+
+    public function testSlug() {
+        $this->validator->validate([
             'title' => 'test-driven-development-with-php-demystified'
         ]);
 
-        $this->assertEquals($validator->failed(), false);
+        $this->assertFalse($this->validator->failed());
+    }
+
+    public function testSlugList()
+    {
+        $this->validator2->validate([
+            'titles' => ['a-title', 'another-title', 'a-third-title']
+        ]);
+
+        $this->assertFalse($this->validator2->failed());
     }
 
     public function testFailingSlug() {
-        $validator = new Validator([
-            'title' => ['slug']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'title' => 'test driven development with php demystified'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingSlug2() {
-        $validator = new Validator([
-            'title' => ['slug']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'title' => 'Test-Driven-Development-With-Php-Demystified'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
+    }
+
+    public function testFailingSlugList()
+    {
+        $this->validator2->validate([
+            'titles' => ['a-title', 'another title', 'a-third-title']
+        ]);
+
+        $this->assertTrue($this->validator2->failed());
     }
 }
