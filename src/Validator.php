@@ -143,7 +143,7 @@ class Validator
             foreach ($rules as $rule) {
                 $this->currentRule = $rule;
 
-                if (is_array($values) === true && $this->_currentRuleIs(Rule::ARRAY) === false) {
+                if ( (is_array($values) === true && $this->_currentRuleIs(Rule::ARRAY) === false) || ($this->_currentRuleIs(Rule::ARRAY) === true && preg_match('/\*\.\w+$/', $this->currentKey) === 1)) {
                     foreach ($values as $index => $value) {
                         $this->currentValue = $value;
                         $this->currentIndex = $index;
@@ -270,7 +270,7 @@ class Validator
      */
     private function _arrayRuleFails(): bool 
     {
-        return is_array($this->itemsToValidate[$this->currentKey]) === false;
+        return is_array($this->currentValue) === false;
     }
 
     /**
