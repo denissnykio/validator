@@ -3,172 +3,163 @@ use PHPUnit\Framework\TestCase;
 use Khalyomede\Validator;
 
 class DateTest extends TestCase {
-    public function testDate() {
-        $validator = new Validator([
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator;
+
+    /**
+     * @var Khalyomede\Validator
+     */
+    protected $validator2;
+
+    public function setUp()
+    {
+        $this->validator = new Validator([
             'created_at' => ['date']
         ]);
 
-        $validator->validate([
+        $this->validator2 = new Validator([
+            'people.*.birth_date' => ['date']
+        ]);
+    }
+
+    public function testDate() {
+        $this->validator->validate([
             'created_at' => '2018-11-14'
         ]);
 
-        $this->assertEquals($validator->failed(), false);
+        $this->assertFalse($this->validator->failed());
+    }
+
+    public function testDateList()
+    {
+        $this->validator2->validate([
+            'people' => [
+                ['name' => 'John', 'birth_date' => '1970-01-01'],
+                ['name' => 'Foo', 'birth_date' => '2018-12-07'],
+                ['name' => 'Bar', 'birth_date' => '2018-11-21']
+            ]
+        ]);
+
+        $this->assertFalse($this->validator2->failed());
     }
 
     public function testFailingDate() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-11-14 22:02:45'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate2() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate3() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-11'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate4() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018/11/14'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate5() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-31-12'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate6() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => 42
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate7() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => 'kurosaki'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate8() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-11-150'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate9() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-110-15'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate10() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-110-150'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate11() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-1-15'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate12() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-11-1'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
     }
 
     public function testFailingDate13() {
-        $validator = new Validator([
-            'created_at' => ['date']
-        ]);
-
-        $validator->validate([
+        $this->validator->validate([
             'created_at' => '2018-1-1'
         ]);
 
-        $this->assertEquals($validator->failed(), true);
+        $this->assertTrue($this->validator->failed());
+    }
+
+    public function failingDateList()
+    {
+        $this->validator2->validate([
+            'people' => [
+                ['name' => 'John', 'birth_date' => '1970-01-01'],
+                ['name' => 'Foo', 'birth_date' => '2018-12-2018'],
+                ['name' => 'Bar', 'birth_date' => '2018-11-21']
+            ]
+        ]);
+
+        $this->assertTrue($this->validator2->failed());
     }
 }
 ?>
