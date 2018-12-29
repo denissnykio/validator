@@ -156,7 +156,7 @@ class Validator
             foreach ($rules as $rule) {
                 $this->currentRule = $rule;
 
-                if ($this->_currentRuleIs(Rule::PRESENT) && $failed) {
+                if (($this->_currentRuleIs(Rule::PRESENT) || $this->_currentRuleIs(Rule::REQUIRED)) && $failed) {
                     $values = $this->itemsToValidate;
                 }
 
