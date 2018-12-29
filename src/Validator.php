@@ -104,6 +104,7 @@ class Validator
         $this->currentKey = '';
         $this->currentRule = '';
         $this->currentValue = null;
+        $this->currentIndex = 0;
     }
 
     /**
@@ -120,10 +121,20 @@ class Validator
         $availableRules = static::_rules();
 
         foreach ($this->rules as $key => $rules) {
-            $this->currentKey = $key;            
+            $this->currentKey = $key;     
+            
+            $ruleFound = false;
             
             foreach ($rules as $rule) {
-                if (in_array($rule, $availableRules) === false) {
+                foreach ($availableRules as $availableRule) {
+                    if (preg_match("/$availableRule/", $rule) === 1) {
+                        $ruleFound = true;
+
+                        break;
+                    }
+                }
+
+                if (!$ruleFound) {
                     $exception = new RuleNotFoundException("rule \"$rule\" does not exists");
                     $exception->setRule($rule);
                     
@@ -132,16 +143,22 @@ class Validator
             }
 
             $values = null;
+            $failed = false;
             
             try {
                 $values = array_get($this->itemsToValidate, $this->currentKey);
             }
             catch( OutOfBoundsException $exception ) {
                 $values = null;
+                $failed = true;
             }
             
             foreach ($rules as $rule) {
                 $this->currentRule = $rule;
+
+                if ($this->_currentRuleIs(Rule::PRESENT) && $failed) {
+                    $values = $this->itemsToValidate;
+                }
 
                 if ( (is_array($values) === true && $this->_currentRuleIs(Rule::ARRAY) === false) || ($this->_currentRuleIs(Rule::ARRAY) === true && preg_match('/\*\.\w+$/', $this->currentKey) === 1)) {
                     foreach ($values as $index => $value) {
@@ -149,8 +166,10 @@ class Validator
                         $this->currentIndex = $index;
 
                         $this->_performValidation();
+
                     }
                 } else {
+                    $this->currentIndex = 0;
                     $this->currentValue = $values;
 
                     $this->_performValidation();
@@ -180,6 +199,7 @@ class Validator
             || ($this->_currentRuleIs(Rule::DATETIME) && $this->_datetimeRuleFails() === true)
             || ($this->_currentRuleIs(Rule::TIME) && $this->_timeRuleFails() === true)
             || ($this->_currentRuleIs(Rule::PRESENT) && $this->_presentRuleFails() === true)
+            || ($this->_currentRuleIs(Rule::SAME) && $this->_sameRuleFails() === true)
         ) {
             $this->_addFailure();
         } else {
@@ -225,6 +245,7 @@ class Validator
         $failure = new stdClass;
         $failure->key = $this->currentKey;
         $failure->rule = $this->currentRule;
+        $failure->index = $this->currentIndex;
 
         $this->failures[] = $failure;
     }
@@ -250,7 +271,7 @@ class Validator
      */
     private function _currentRuleIs(string $rule): bool 
     {
-        return $this->currentRule === $rule;
+        return preg_match('/' . $rule . '/', $this->currentRule) === 1;
     }
 
     /**
@@ -426,9 +447,36 @@ class Validator
              */
             $key = preg_replace('/\*\.(\w+)$/', "{$this->currentIndex}.$1", $this->currentKey);
 
-            array_get($this->itemsToValidate, $key);
+            $value = array_get($this->itemsToValidate, $key);
         }
         catch( OutOfBoundsException $exception ) {
+            $fails = true;
+        }
+
+        return $fails;
+    }
+
+    /**
+     * Returns true if the validation that two fields are the same failed.
+     * 
+     * @return bool
+     */
+    private function _sameRuleFails(): bool
+    {
+        $fails = false;
+
+        [$rule, $field] = explode(':', $this->currentRule);
+
+        $key = preg_replace('/\*\.(\w+)$/', "{$this->currentIndex}.$1", $this->currentKey);
+        $siblingKey = preg_replace('/\*\.(\w+)$/', "{$this->currentIndex}.$1", $field);
+
+        try {
+            $value = array_get($this->itemsToValidate, $key);
+            $siblingValue = array_get($this->itemsToValidate, $siblingKey);
+
+            $fails = $value !== $siblingValue;
+        }
+        catch(OutOfBoundsException $exception) {
             $fails = true;
         }
 
@@ -454,6 +502,16 @@ class Validator
      */
     public static function has(string $rule): bool {
         return in_array($rule, static::_rules());
+    }
+
+    /**
+     * Returns all the errors occured.
+     * 
+     * @return array<object>
+     */
+    public function errors(): array
+    {
+        return $this->failures;
     }
 }
 ?>
