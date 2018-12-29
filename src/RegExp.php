@@ -27,6 +27,6 @@ class RegExp {
      * 
      * @see https://regex101.com/r/7EuROf/1/tests 
      */
-    const NOT_SLUG = '/[^a-z-0-9]/'; 
+    const NOT_SLUG = '/[^a-z-0-9]/';
 }
 ?>
