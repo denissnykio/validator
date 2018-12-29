@@ -26,10 +26,11 @@ class Rule {
     const INTEGER = 'integer';
     const LOWER = 'lower';
     const SLUG = 'slug';
-    const DATE = 'date';
-    const DATETIME = 'datetime';
-    const TIME = 'time';
+    const DATE = '^date$';
+    const DATETIME = '^datetime$';
+    const TIME = '^time$';
     const PRESENT = 'present';
+    const SAME = 'same:.*';
 
     /**
      * Returns all the rules.
