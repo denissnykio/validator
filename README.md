@@ -152,6 +152,7 @@ var_dump( $validator->failed() ) // "false", hm... should have been true after a
 - [lower](#lower)
 - [present](#present)
 - [required](#required)
+- [same](#same)
 - [slug](#slug)
 - [string](#string)
 - [time](#time)
@@ -245,6 +246,17 @@ Validate that a key is present. The key can be empty by the way.
 ```php
 $validator = new Validator([
     'name' => ['required']
+]);
+```
+
+### same
+
+Validate that two keys are the same.
+
+```php
+$validator = new Validator([
+    'password' => ['string', 'same:confirmation'],
+    'confirmation' => ['string']
 ]);
 ```
 
