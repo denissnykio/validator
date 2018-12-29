@@ -78,14 +78,14 @@ use Khalyomede\Exception\RuleNotFoundException;
 $validator = new Validator(['name' => ['required', 'string']]);
 
 try {
-    $validator->validate(['name' => 'John']);
+  $validator->validate(['name' => 'John']);
 
-    var_dump($validator->failed()); // false
+  var_dump($validator->failed()); // false
 }
 catch( RuleNotFoundException $exception ) {
-    echo "rule {$exception->getRule()} does not exist";
+  echo "rule {$exception->getRule()} does not exist";
 
-    exit(1);
+  exit(1);
 }
 ```
 
@@ -130,12 +130,12 @@ require __DIR__ . '/../vendor/autoload.php';
 use Khalyomede\Validator;
 
 $validator = new Validator([
-    'sith' => ['required', 'array'],
-    'sith.*' => ['string']
+  'sith' => ['required', 'array'],
+  'sith.*' => ['string']
 ]);
 
 $validator->validate([
-    'sith' => ['Darth Maul', 'Darth Vador', 'Darth Sidious']
+  'sith' => ['Darth Maul', 'Darth Vador', 'Darth Sidious']
 ]);
 
 var_dump( $validator->failed() ) // "false", hm... should have been true after all these guys did but anyway
@@ -164,7 +164,7 @@ Validate that a key is an array.
 
 ```php
 $validator = new Validator([
-    'hobbies' => ['array']
+  'hobbies' => ['array']
 ]);
 ```
 
@@ -174,7 +174,7 @@ Validate that a key is filled with a valid date in format `yyyy-mm-dd` ([ISO 860
 
 ```php
 $validator = new Validator([
-    'created_at' => ['date']
+  'created_at' => ['date']
 ]);
 ```
 
@@ -184,7 +184,7 @@ Validate that a key is filled with a valid date in formt `yyyy-mm-dd hh:mm:ss` (
 
 ```php
 $validator = new Validator([
-    'updated_at' => ['datetime']
+  'updated_at' => ['datetime']
 ]);
 ```
 
@@ -194,7 +194,7 @@ Validate that a key is filled with an email.
 
 ```php
 $validator = new Validator([
-    'contact' => ['email']
+  'contact' => ['email']
 ]);
 ```
 
@@ -204,7 +204,7 @@ Validate that a key is filled with a non empty value.
 
 ```php
 $validator = new Validator([
-    'name' => ['filled']
+  'name' => ['filled']
 ]);
 ```
 
@@ -214,7 +214,7 @@ Validate that a key is filled with an integer.
 
 ```php
 $validator = new Validator([
-    'age' => ['integer']
+  'age' => ['integer']
 ]);
 ```
 
@@ -224,7 +224,7 @@ Validate that a key is filled only with lowercases (non-alpha characters are all
 
 ```php
 $validator = new Validator([
-    'street' => ['lower']
+  'street' => ['lower']
 ]);
 ```
 
@@ -234,7 +234,7 @@ Validate that a key exists.
 
 ```php
 $validator = new Validator([
-    'lastname' => ['present']
+  'lastname' => ['present']
 ]);
 
 ```
@@ -245,7 +245,7 @@ Validate that a key is present. The key can be empty by the way.
 
 ```php
 $validator = new Validator([
-    'name' => ['required']
+  'name' => ['required']
 ]);
 ```
 
@@ -255,8 +255,8 @@ Validate that two keys are the same.
 
 ```php
 $validator = new Validator([
-    'password' => ['string', 'same:confirmation'],
-    'confirmation' => ['string']
+  'password' => ['string', 'same:confirmation'],
+  'confirmation' => ['string']
 ]);
 ```
 
@@ -266,7 +266,7 @@ Validate that a string is a slug (only lowercases, dashes `-` allowed).
 
 ```php
 $validator = new Validator([
-    'title' => ['slug']
+  'title' => ['slug']
 ]);
 ```
 
@@ -276,7 +276,7 @@ Validate that a key is a string.
 
 ```php
 $validator = new Validator([
-    'name' = ['string']
+  'name' = ['string']
 ]);
 ```
 
@@ -286,7 +286,7 @@ Validate that a key is filled with a time with the format `hh:mm:ss`.
 
 ```php
 $validator = new Validator([
-    'duration' => ['time']
+  'duration' => ['time']
 ]);
 ```
 
@@ -296,7 +296,7 @@ Validate that a string is only in uppercase.
 
 ```php
 $validator = new Validator([
-    'name' => ['upper']
+  'name' => ['upper']
 ]);
 ```
 
@@ -311,7 +311,7 @@ Add a new rule.
 
 ```php
 Validator::extends('jedi', function($value, $key, $items) {
-    return in_array($value, ['qui-gon jinn', 'obiwan', 'luke']);
+  return in_array($value, ['qui-gon jinn', 'obiwan', 'luke']);
 });
 ```
 
